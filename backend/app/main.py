@@ -44,10 +44,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Helper function to add CORS headers to responses
+def add_cors_headers(response, request: Request):
+    origin = request.headers.get("origin")
+    if origin in origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
+
 # Custom Exception Handler for EduPilotExceptions
 @app.exception_handler(EduPilotException)
 async def edupilot_exception_handler(request: Request, exc: EduPilotException):
-    return JSONResponse(
+    response = JSONResponse(
         status_code=exc.status_code,
         content={
             "error": {
@@ -57,12 +67,13 @@ async def edupilot_exception_handler(request: Request, exc: EduPilotException):
             }
         }
     )
+    return add_cors_headers(response, request)
 
 # General Exception Handler to prevent leakage of internal stacktraces
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled server error: {exc}", exc_info=True)
-    return JSONResponse(
+    response = JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
             "error": {
@@ -72,6 +83,7 @@ async def general_exception_handler(request: Request, exc: Exception):
             }
         }
     )
+    return add_cors_headers(response, request)
 
 # Include main router
 app.include_router(api_router, prefix="/api/v1")
