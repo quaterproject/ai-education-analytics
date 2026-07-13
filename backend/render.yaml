@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: omnirisk-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: DATABASE_URI
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: MODEL
+        value: llama-3.3-70b-versatile
