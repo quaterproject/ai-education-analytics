@@ -15,17 +15,14 @@ RUN pip install --no-cache-dir uv
 # Copy dependencies manifest
 COPY pyproject.toml uv.lock ./
 
-# Install python dependencies system-wide inside the container
-RUN uv pip install --system --no-cache -r pyproject.toml
+# ✅ FIX 1: Correct package installation for pyproject.toml
+RUN uv pip install --system --no-cache .
 
 # Copy backend codebase
 COPY . .
 
-# Run the model training script at build time to pre-bake the saved models into the image
-RUN python src/models/train_models.py
-
 # Expose port 8000
 EXPOSE 8000
 
-# Start FastAPI application
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# ✅ FIX 2: Run training first, THEN start FastAPI server automatically on startup
+CMD python src/models/train_models.py && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
