@@ -45,8 +45,9 @@ model_lstm.compile(
 )
 
 model_lstm.fit(X_lstm, y_lstm, epochs=5, batch_size=32, verbose=1)
-model_lstm.save("data/models/lstm_risk_model.h5")
-print("Saved LSTM model to data/models/lstm_risk_model.h5")
+# model_lstm.save("data/models/lstm_risk_model.h5")
+model_lstm.save("data/models/lstm_risk_model.keras")
+print("Saved LSTM model to data/models/lstm_risk_model.keras")
 
 # ---------------------------------------------------------
 # 2. Train CNN Model (Image Classification)
@@ -102,8 +103,9 @@ model_cnn.compile(
 )
 
 model_cnn.fit(X_cnn, y_cnn, epochs=5, batch_size=32, verbose=1)
-model_cnn.save("data/models/cnn_damage_model.h5")
-print("Saved CNN model to data/models/cnn_damage_model.h5")
+model_cnn.save("data/models/cnn_damage_model.keras")
+
+print("Saved CNN model to data/models/cnn_damage_model.keras")
 
 # ---------------------------------------------------------
 # 3. Train ANN Model (Audio Classification)
@@ -137,8 +139,8 @@ model_ann.compile(
 )
 
 model_ann.fit(X_ann, y_ann, epochs=5, batch_size=32, verbose=1)
-model_ann.save("data/models/ann_audio_model.h5")
-print("Saved ANN model to data/models/ann_audio_model.h5")
+model_ann.save("data/models/ann_audio_model.keras")
+print("Saved ANN model to data/models/ann_audio_model.keras")
 
 # ---------------------------------------------------------
 # 4. Generate Test Samples for CLI / Web App Demo

@@ -135,7 +135,7 @@ async def create_assessment(
                 print(f"Error indexing compliance doc: {e}")
 
         # 3. Model Inference (LSTM Tabular)
-        lstm_model_path = "data/models/lstm_risk_model.h5"
+        lstm_model_path = "data/models/lstm_risk_model.keras"
         if not os.path.exists(lstm_model_path):
             raise HTTPException(status_code=500, detail="LSTM model not trained. Please run training script first.")
             
@@ -143,7 +143,7 @@ async def create_assessment(
         lstm_importance, lstm_class, lstm_preds = generate_perturbation_importance(lstm_model_path, saved_csv_path)
 
         # 4. Model Inference (CNN Image)
-        cnn_model_path = "data/models/cnn_damage_model.h5"
+        cnn_model_path = "data/models/cnn_damage_model.keras"
         if not os.path.exists(cnn_model_path):
             raise HTTPException(status_code=500, detail="CNN model not trained.")
             
@@ -152,7 +152,7 @@ async def create_assessment(
         cnn_confidence, cnn_class = generate_gradcam(cnn_model_path, saved_img_path, gradcam_output_path)
 
         # 5. Model Inference (ANN Audio)
-        ann_model_path = "data/models/ann_audio_model.h5"
+        ann_model_path = "data/models/ann_audio_model.keras"
         if not os.path.exists(ann_model_path):
             raise HTTPException(status_code=500, detail="ANN model not trained.")
             
