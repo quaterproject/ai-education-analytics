@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
-# Install system dependencies including Tesseract OCR and audio libs
-RUN apt-get update && apt-get install -y \
+# System deps: Tesseract OCR + audio libs
+RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     libtesseract-dev \
     ffmpeg \
@@ -9,20 +9,29 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Install uv python package manager
+# Install uv
 RUN pip install --no-cache-dir uv
 
-# Copy dependencies manifest
+# Copy dependency manifests first (layer caching)
 COPY pyproject.toml uv.lock ./
 
-# ✅ FIX 1: Correct package installation for pyproject.toml
-RUN uv pip install --system --no-cache .
+# Use uv sync so installs match the lockfile exactly (reproducible builds)
+RUN uv sync --frozen --no-cache --no-dev
 
-# Copy backend codebase
+# Make the venv the default python/uvicorn
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Copy the rest of the codebase
 COPY . .
 
-# Expose port 8000
+# Non-root user for security
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 8000
 
-# ✅ FIX 2: Run training first, THEN start FastAPI server automatically on startup
-CMD python src/models/train_models.py && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Only train if model artifacts are missing — don't retrain on every boot
+COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]

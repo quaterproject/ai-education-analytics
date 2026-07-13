@@ -1,0 +1,69 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# uv
+.uv-cache/
+
+# Environment/secrets
+.env
+.env.*
+*.pem
+*.key
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+test/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+
+# Docs (not needed at runtime)
+README.md
+*.md
+
+# Docker itself
+Dockerfile
+docker-compose*
+.dockerignore
+
+# Misc dev-only configs not needed in image
+render.yaml
+requirements-dev.txt
+
+# Runtime uploads that shouldn't ship in the image (regenerated at runtime)
+data/uploads/
+data/samples/
+test
