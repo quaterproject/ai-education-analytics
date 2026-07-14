@@ -22,7 +22,8 @@ RUN uv sync --frozen --no-cache --no-dev
 ENV PATH="/app/.venv/bin:$PATH"
 ENV TF_CPP_MIN_LOG_LEVEL=3
 ENV OMP_NUM_THREADS=1
-
+ENV TF_ENABLE_ONEDNN_OPTS=0
+ENV MALLOC_MMAP_THRESHOLD_=131072
 
 # Copy the rest of the codebase
 COPY . .
