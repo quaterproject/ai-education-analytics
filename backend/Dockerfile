@@ -20,6 +20,9 @@ RUN uv sync --frozen --no-cache --no-dev
 
 # Make the venv the default python/uvicorn
 ENV PATH="/app/.venv/bin:$PATH"
+ENV TF_CPP_MIN_LOG_LEVEL=3
+ENV OMP_NUM_THREADS=1
+
 
 # Copy the rest of the codebase
 COPY . .
